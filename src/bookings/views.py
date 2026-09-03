@@ -34,4 +34,9 @@ class RoomView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
-
+    def patch(self, request, room_id: int):
+        room = get_object_or_404(Room, id=room_id)
+        serializer = RoomSerializer(room, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

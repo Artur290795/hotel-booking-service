@@ -168,3 +168,34 @@ class TestDeleteRoom:
         add_room_to_db(description="test room", price=100)
         response = client.delete("/rooms/9999/")
         assert response.status_code == 404
+
+class TestPatchRoom:
+
+    @pytest.mark.django_db
+    def test_patch_change_description(self, client, add_room_to_db):
+        room = add_room_to_db(description="test room", price=100)
+        response = client.patch(f"/rooms/{room.id}/", data={"description": "test room updated"})
+        assert response.status_code == 200
+        assert Room.objects.get(id=room.id).description == "test room updated"
+        assert Room.objects.get(id=room.id).price == 100
+
+    @pytest.mark.django_db
+    def test_patch_change_price(self, client, add_room_to_db):
+        room = add_room_to_db(description="test room", price=100)
+        response = client.patch(f"/rooms/{room.id}/", data={"price": 200})
+        assert response.status_code == 200
+        assert Room.objects.get(id=room.id).price == 200
+        assert Room.objects.get(id=room.id).description == "test room"
+
+
+    @pytest.mark.django_db
+    def test_patch_not_existing_room(self, client):
+        response = client.patch("/rooms/5/", data={"description": "test room updated"})
+        assert response.status_code == 404
+
+    @pytest.mark.django_db
+    @pytest.mark.parametrize("data", [{"price": "45,45"}, {"price": "invalid"}, {"price": -200},])
+    def test_patch_invalid_data(self, client, add_room_to_db, data):
+        room = add_room_to_db(description="test room", price=100)
+        response = client.patch(f"/rooms/{room.id}/", data=data)
+        assert response.status_code == 400
