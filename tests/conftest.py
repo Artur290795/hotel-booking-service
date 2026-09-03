@@ -1,3 +1,4 @@
+from bookings.models import Room
 import pytest
 from rest_framework.test import APIClient
 
@@ -22,3 +23,11 @@ def room_factory():
         
         return defaults
     return make_room_data
+
+@pytest.fixture
+def add_room_to_db(room_factory):
+    def add_room(without_description=False, without_price=False, **kwargs):
+        room_data = room_factory(without_description=without_description, without_price=without_price, **kwargs)
+        room = Room.objects.create(**room_data)
+        return room
+    return add_room

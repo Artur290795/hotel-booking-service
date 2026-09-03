@@ -19,9 +19,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from bookings.views import RoomCreateView
+from bookings.views import RoomView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("rooms/", RoomCreateView.as_view(), name="room-create"),
+    path("rooms/", RoomView.as_view(), name="room"),
+    path("rooms/<int:room_id>/", RoomView.as_view(), name="room-delete"),
 ]
