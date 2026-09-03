@@ -132,17 +132,17 @@ class TestGetRoom:
         created_descriptions = [room["description"] for room in response.json()]
         assert created_descriptions == result
 
-
     @pytest.mark.django_db
     @pytest.mark.parametrize("sort, order", [("invalid", "asc"), ("price", "invalid")])
-    def test_get_all_rooms_with_invalid_sort_and_order_parameter(self, client, add_room_to_db, sort, order):
+    def test_get_all_rooms_with_invalid_sort_and_order_parameter(
+        self, client, add_room_to_db, sort, order
+    ):
         add_room_to_db(description="test room 3", price=300)
         add_room_to_db(description="test room 1", price=100)
         add_room_to_db(description="test room 2", price=200)
         response = client.get(f"/rooms/?sort={sort}&order={order}")
         assert response.status_code == 400
         assert response.json() == {"error": "Invalid sort or order parameter"}
-
 
     @pytest.mark.django_db
     def test_order_without_sort(self, client, add_room_to_db):
@@ -168,12 +168,15 @@ class TestDeleteRoom:
         response = client.delete("/rooms/9999/")
         assert response.status_code == 404
 
+
 class TestPatchRoom:
 
     @pytest.mark.django_db
     def test_patch_change_description(self, client, add_room_to_db):
         room = add_room_to_db(description="test room", price=100)
-        response = client.patch(f"/rooms/{room.id}/", data={"description": "test room updated"})
+        response = client.patch(
+            f"/rooms/{room.id}/", data={"description": "test room updated"}
+        )
         assert response.status_code == 200
         assert Room.objects.get(id=room.id).description == "test room updated"
         assert Room.objects.get(id=room.id).price == 100
@@ -186,14 +189,20 @@ class TestPatchRoom:
         assert Room.objects.get(id=room.id).price == 200
         assert Room.objects.get(id=room.id).description == "test room"
 
-
     @pytest.mark.django_db
     def test_patch_not_existing_room(self, client):
         response = client.patch("/rooms/5/", data={"description": "test room updated"})
         assert response.status_code == 404
 
     @pytest.mark.django_db
-    @pytest.mark.parametrize("data", [{"price": "45,45"}, {"price": "invalid"}, {"price": -200},])
+    @pytest.mark.parametrize(
+        "data",
+        [
+            {"price": "45,45"},
+            {"price": "invalid"},
+            {"price": -200},
+        ],
+    )
     def test_patch_invalid_data(self, client, add_room_to_db, data):
         room = add_room_to_db(description="test room", price=100)
         response = client.patch(f"/rooms/{room.id}/", data=data)
