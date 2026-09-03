@@ -164,8 +164,7 @@ class TestDeleteRoom:
         assert Room.objects.count() == 2
 
     @pytest.mark.django_db
-    def test_delete_non_existing_room(self, client, add_room_to_db):
-        add_room_to_db(description="test room", price=100)
+    def test_delete_non_existing_room(self, client):
         response = client.delete("/rooms/9999/")
         assert response.status_code == 404
 
