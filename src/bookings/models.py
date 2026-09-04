@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from django.core.validators import MinValueValidator
 
 
@@ -24,3 +25,11 @@ class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     start_date = models.DateField()  # с какого по какое снимают жилье
     finish_date = models.DateField()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(start_date__lt=F("finish_date")),
+                name="booking_dates_valid",
+            )
+        ]

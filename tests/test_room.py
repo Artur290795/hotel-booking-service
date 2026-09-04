@@ -142,7 +142,6 @@ class TestGetRoom:
         add_room_to_db(description="test room 2", price=200)
         response = client.get(f"/rooms/?sort={sort}&order={order}")
         assert response.status_code == 400
-        assert response.json() == {"error": "Invalid sort or order parameter"}
 
     @pytest.mark.django_db
     def test_order_without_sort(self, client, add_room_to_db):

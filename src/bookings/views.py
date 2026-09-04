@@ -16,21 +16,14 @@ class RoomView(APIView):
     def get(self, request):
         sort = request.query_params.get("sort")
         order = request.query_params.get("order")
-
-        if sort and (
-            sort not in ["price", "created_at"] or order not in ["asc", "desc"]
-        ):
-            return Response(
-                {"error": "Invalid sort or order parameter"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
         if not sort and order:
-            return Response(
-                {
-                    "error": "Sort parameter is required when order parameter is provided"
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return Response({"error": "Sort parameter is required when order parameter is provided"}, status=status.HTTP_400_BAD_REQUEST)
+        if sort:
+            if sort not in ["price", "created_at"]:
+                return Response({"error": "Invalid sort parameter"}, status=status.HTTP_400_BAD_REQUEST)
+            order = order or "asc"
+            if order not in ("asc", "desc"):
+                return Response({"error": "Invalid order parameter"}, status=status.HTTP_400_BAD_REQUEST)
         rooms = Room.objects.all()
         if sort:
             rooms = (
