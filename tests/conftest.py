@@ -1,6 +1,7 @@
-from bookings.models import Room
 import pytest
 from rest_framework.test import APIClient
+
+from bookings.models import Room
 
 
 @pytest.fixture

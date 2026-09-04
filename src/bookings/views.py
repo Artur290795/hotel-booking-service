@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import BookingSerializer, RoomSerializer
+from rest_framework.views import APIView
+
 from .models import Booking, Room
+from .serializers import BookingSerializer, RoomSerializer
 
 
 class RoomView(APIView):
@@ -17,13 +18,24 @@ class RoomView(APIView):
         sort = request.query_params.get("sort")
         order = request.query_params.get("order")
         if not sort and order:
-            return Response({"error": "Sort parameter is required when order parameter is provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "error": "Sort parameter is required when order parameter is provided"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if sort:
             if sort not in ["price", "created_at"]:
-                return Response({"error": "Invalid sort parameter"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"error": "Invalid sort parameter"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             order = order or "asc"
             if order not in ("asc", "desc"):
-                return Response({"error": "Invalid order parameter"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"error": "Invalid order parameter"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         rooms = Room.objects.all()
         if sort:
             rooms = (
@@ -60,7 +72,7 @@ class BookingView(APIView):
             return Response(
                 {"error": "Invalid room ID"}, status=status.HTTP_400_BAD_REQUEST
             )
-        room = get_object_or_404(Room, id=room_id)
+        get_object_or_404(Room, id=room_id)
         bookings = Booking.objects.filter(room_id=room_id).order_by("start_date")
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

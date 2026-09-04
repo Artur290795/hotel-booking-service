@@ -1,6 +1,8 @@
 from time import sleep
-from bookings.models import Room
+
 import pytest
+
+from bookings.models import Room
 
 
 class TestCreateRoom:
@@ -9,8 +11,8 @@ class TestCreateRoom:
         "price, expected_price",
         [
             (100, "100.00"),
-            (100.00, "100.00"),
-            (100.000, "100.00"),
+            (150.00, "150.00"),
+            (200.00, "200.00"),
             (0, "0.00"),
             ("50.45", "50.45"),
         ],
@@ -169,7 +171,6 @@ class TestDeleteRoom:
 
 
 class TestPatchRoom:
-
     @pytest.mark.django_db
     def test_patch_change_description(self, client, add_room_to_db):
         room = add_room_to_db(description="test room", price=100)

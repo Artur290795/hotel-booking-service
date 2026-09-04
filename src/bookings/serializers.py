@@ -1,10 +1,9 @@
-import random
 from rest_framework import serializers
+
 from bookings.models import Booking, Room
 
 
 class RoomSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Room
         fields = ["id", "description", "price", "created_at"]
@@ -25,7 +24,9 @@ class BookingSerializer(serializers.ModelSerializer):
         if start_date >= finish_date:
             raise serializers.ValidationError("Start date must be before finish date")
         all_bookings_in_room = Booking.objects.filter(room=attrs["room"])
-        conflicted_bookings = all_bookings_in_room.filter(start_date__lt=finish_date, finish_date__gt=start_date).exists()
+        conflicted_bookings = all_bookings_in_room.filter(
+            start_date__lt=finish_date, finish_date__gt=start_date
+        ).exists()
         if conflicted_bookings:
             raise serializers.ValidationError("Room is already booked for this period")
         return attrs

@@ -1,5 +1,6 @@
-from bookings.models import Booking
 import pytest
+
+from bookings.models import Booking
 
 
 class TestCreateBooking:
@@ -141,7 +142,7 @@ class TestGetBooking:
         ]
 
         client.delete(f"/bookings/{booking_data1['id']}/")
-        
+
         response = client.get(f"/bookings/?room_id={room.id}")
 
         assert response.status_code == 200

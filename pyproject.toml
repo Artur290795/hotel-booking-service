@@ -11,7 +11,8 @@ dependencies = [
     "django (>=6.1,<7.0)",
     "djangorestframework (>=3.18.0,<4.0.0)",
     "pytest (>=9.1.1,<10.0.0)",
-    "psycopg[binary] (>=3.3.5,<4.0.0)"
+    "psycopg[binary] (>=3.3.5,<4.0.0)",
+    "pydantic-settings (>=2.15.0,<3.0.0)"
 ]
 
 
@@ -29,5 +30,17 @@ packages = [
 DJANGO_SETTINGS_MODULE = "hotel_service.settings"
 [dependency-groups]
 dev = [
-    "pytest-django (>=4.14.0,<5.0.0)"
+    "pytest-django (>=4.14.0,<5.0.0)",
+    "ruff (>=0.16.6,<0.17.0)",
+    "pre-commit (>=4.6.2,<5.0.0)"
 ]
+
+[tool.ruff]
+exclude = [
+    "migrations",
+    "__pycache__",
+    ".venv",
+    "venv",
+]
+[tool.ruff.lint]
+ignore = ["RUF012"]
