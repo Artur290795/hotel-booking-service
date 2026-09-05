@@ -4,8 +4,13 @@
 import os
 import sys
 
+from loguru import logger
+
+from src.config.logging import configure_logger
+
 
 def main():
+    configure_logger()
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hotel_service.settings")
     try:
@@ -16,6 +21,7 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    logger.info("Application started")
     execute_from_command_line(sys.argv)
 
 

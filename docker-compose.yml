@@ -1,5 +1,7 @@
 services:
   web:
+    build:
+      context: .
     image: hotel-booking
     ports:
       - "8000:8000"
