@@ -1,3 +1,5 @@
+"""DRF-сериализаторы и бизнес-валидация номеров и бронирований."""
+
 from loguru import logger
 from rest_framework import serializers
 
@@ -5,12 +7,16 @@ from bookings.models import Booking, Room
 
 
 class RoomSerializer(serializers.ModelSerializer):
+    """Преобразует модель номера в данные API и обратно."""
+
     class Meta:
         model = Room
         fields = ["id", "description", "price", "created_at"]
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    """Сериализует бронирование и проверяет корректность его периода."""
+
     room_id = serializers.PrimaryKeyRelatedField(
         queryset=Room.objects.all(), source="room"
     )

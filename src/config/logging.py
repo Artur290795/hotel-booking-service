@@ -1,3 +1,5 @@
+"""Настройка единого формата журналирования приложения."""
+
 import sys
 
 from loguru import logger

@@ -10,8 +10,8 @@ from src.config.logging import configure_logger
 
 
 def main():
-    configure_logger()
     """Run administrative tasks."""
+    configure_logger()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hotel_service.settings")
     try:
         from django.core.management import execute_from_command_line
